@@ -22,3 +22,8 @@ for i in $(cat $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','
 for i in $(cat $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "rsync -ave \"ssh -p " $3 "\" --relative " $1 "@" $2 ":" $4 " /backups/" $2 "/" }'>>/tmp/sync.sh ;done
 cat /tmp/sync.sh
 /bin/bash /tmp/sync.sh
+rsnapshot sync
+rsnapshot hourly
+rsnapshot daily
+rsnapshot weekly
+
