@@ -10,10 +10,10 @@ help:
 	@echo ""  This is merely a base image for usage read the README file
 	@echo ""   1. make run       - build and run docker container
 
-build: REMOTE_PATH REMOTE_PORT REMOTE_USER REMOTE_HOST builddocker
+build: INVENTORY BACKUP_DIR REMOTE_PATH REMOTE_PORT REMOTE_USER REMOTE_HOST builddocker
 
 # run a plain container
-run: build rundocker
+run: rm build rundocker
 
 rundocker: runprod
 
@@ -22,20 +22,17 @@ runprod: rsnapshotCID
 rsnapshotCID:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
-	$(eval REMOTE_USER := $(shell cat REMOTE_USER))
-	$(eval REMOTE_HOST := $(shell cat REMOTE_HOST))
-	$(eval REMOTE_PORT := $(shell cat REMOTE_PORT))
-	$(eval REMOTE_PATH := $(shell cat REMOTE_PATH))
 	$(eval KEYS := $(shell cat KEYS))
+	$(eval BACKUP_DIR := $(shell cat BACKUP_DIR))
+	$(eval INVENTORY := $(shell cat INVENTORY))
 	@docker run --name=$(NAME) \
-	--cidfile="rsnapshotCID" \
 	-d \
-	-e "REMOTE_PATH=$(REMOTE_PATH)" \
-	-e "REMOTE_PORT=$(REMOTE_PORT)" \
-	-e "REMOTE_USER=$(REMOTE_USER)" \
-	-e "REMOTE_HOST=$(REMOTE_HOST)" \
+	--cidfile="rsnapshotCID" \
 	-v $(KEYS):/root/keys \
+	-v $(INVENTORY):/root/inventory \
+	-v $(BACKUP_DIR):/backups \
 	-t $(TAG)
+
 
 builddocker:
 	/usr/bin/time -v docker build -t `cat TAG` .
@@ -75,4 +72,14 @@ REMOTE_HOST:
 REMOTE_USER:
 	@while [ -z "$$REMOTE_USER" ]; do \
 		read -r -p "Enter the REMOTE_USER you wish to associate with this container [REMOTE_USER]: " REMOTE_USER; echo "$$REMOTE_USER">>REMOTE_USER; cat REMOTE_USER; \
+	done ;
+
+INVENTORY:
+	@while [ -z "$$INVENTORY" ]; do \
+		read -r -p "Enter the INVENTORY you wish to associate with this container [INVENTORY]: " INVENTORY; echo "$$INVENTORY">>INVENTORY; cat INVENTORY; \
+	done ;
+
+BACKUP_DIR:
+	@while [ -z "$$BACKUP_DIR" ]; do \
+		read -r -p "Enter the BACKUP_DIR directory you wish to associate with this container [BACKUP_DIR]: " BACKUP_DIR; echo "$$BACKUP_DIR">>BACKUP_DIR; cat BACKUP_DIR; \
 	done ;
