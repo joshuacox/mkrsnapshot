@@ -95,7 +95,7 @@ cmd_logger	/usr/bin/logger
 #########################################
 
 retain		hourly	6
-retain		daily 	7
+retain		daily	7
 retain		weekly	4
 #retain	monthly	3
 
