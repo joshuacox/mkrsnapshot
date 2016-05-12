@@ -18,6 +18,7 @@ rsnapshotCID:
 	$(eval TAG := $(shell cat TAG))
 	$(eval KEYS := $(shell cat KEYS))
 	$(eval BACKUP_DIR := $(shell cat BACKUP_DIR))
+	$(eval SNAPSHOT_DIR := $(shell cat SNAPSHOT_DIR))
 	$(eval INVENTORY := $(shell cat INVENTORY))
 	@docker run --name=$(NAME) \
 	-d \
