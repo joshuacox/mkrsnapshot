@@ -31,6 +31,7 @@ rsnapshotCID:
 	-v $(KEYS):/root/keys \
 	-v $(INVENTORY):/root/inventory \
 	-v $(BACKUP_DIR):/backups \
+	-v `pwd`/rsnapshot.conf:/etc/rsnapshot.conf \
 	-t $(TAG)
 
 
