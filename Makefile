@@ -1,7 +1,5 @@
 .PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs
 
-rsnapshot: run
-
 all: help
 
 help:
@@ -10,14 +8,10 @@ help:
 	@echo ""  This is merely a base image for usage read the README file
 	@echo ""   1. make run       - build and run docker container
 
-build: INVENTORY BACKUP_DIR REMOTE_PATH REMOTE_PORT REMOTE_USER REMOTE_HOST builddocker
+build: INVENTORY SNAPSHOT_DIR BACKUP_DIR builddocker
 
 # run a plain container
-run: rm build rundocker
-
-rundocker: runprod
-
-runprod: rsnapshotCID
+run: rm build rsnapshotCID
 
 rsnapshotCID:
 	$(eval NAME := $(shell cat NAME))
@@ -35,7 +29,6 @@ rsnapshotCID:
 	-v `pwd`/rsnapshot.conf:/etc/rsnapshot.conf \
 	-t $(TAG)
 
-
 builddocker:
 	/usr/bin/time -v docker build -t `cat TAG` .
 
@@ -48,33 +41,11 @@ rm-image:
 
 rm: kill rm-image
 
-clean: rm
-
 enter:
 	docker exec -i -t `cat rsnapshotCID` /bin/bash
 
 logs:
 	docker logs -f `cat rsnapshotCID`
-
-REMOTE_PATH:
-	@while [ -z "$$REMOTE_PATH" ]; do \
-		read -r -p "Enter the REMOTE_PATH you wish to associate with this container [REMOTE_PATH]: " REMOTE_PATH; echo "$$REMOTE_PATH">>REMOTE_PATH; cat REMOTE_PATH; \
-	done ;
-
-REMOTE_PORT:
-	@while [ -z "$$REMOTE_PORT" ]; do \
-		read -r -p "Enter the REMOTE_PORT you wish to associate with this container [REMOTE_PORT]: " REMOTE_PORT; echo "$$REMOTE_PORT">>REMOTE_PORT; cat REMOTE_PORT; \
-	done ;
-
-REMOTE_HOST:
-	@while [ -z "$$REMOTE_HOST" ]; do \
-		read -r -p "Enter the REMOTE_HOST you wish to associate with this container [REMOTE_HOST]: " REMOTE_HOST; echo "$$REMOTE_HOST">>REMOTE_HOST; cat REMOTE_HOST; \
-	done ;
-
-REMOTE_USER:
-	@while [ -z "$$REMOTE_USER" ]; do \
-		read -r -p "Enter the REMOTE_USER you wish to associate with this container [REMOTE_USER]: " REMOTE_USER; echo "$$REMOTE_USER">>REMOTE_USER; cat REMOTE_USER; \
-	done ;
 
 INVENTORY:
 	@while [ -z "$$INVENTORY" ]; do \
@@ -90,3 +61,9 @@ SNAPSHOT_DIR:
 	@while [ -z "$$SNAPSHOT_DIR" ]; do \
 		read -r -p "Enter the SNAPSHOT_DIR directory you wish to associate with this container [SNAPSHOT_DIR]: " SNAPSHOT_DIR; echo "$$SNAPSHOT_DIR">>SNAPSHOT_DIR; cat SNAPSHOT_DIR; \
 	done ;
+
+# Aliases
+
+rsnapshot: run
+
+clean: rm
