@@ -31,6 +31,7 @@ rsnapshotCID:
 	-v $(KEYS):/root/keys \
 	-v $(INVENTORY):/root/inventory \
 	-v $(BACKUP_DIR):/backups \
+	-v $(SNAPSHOT_DIR):/snapshot \
 	-v `pwd`/rsnapshot.conf:/etc/rsnapshot.conf \
 	-t $(TAG)
 
@@ -83,4 +84,9 @@ INVENTORY:
 BACKUP_DIR:
 	@while [ -z "$$BACKUP_DIR" ]; do \
 		read -r -p "Enter the BACKUP_DIR directory you wish to associate with this container [BACKUP_DIR]: " BACKUP_DIR; echo "$$BACKUP_DIR">>BACKUP_DIR; cat BACKUP_DIR; \
+	done ;
+
+SNAPSHOT_DIR:
+	@while [ -z "$$SNAPSHOT_DIR" ]; do \
+		read -r -p "Enter the SNAPSHOT_DIR directory you wish to associate with this container [SNAPSHOT_DIR]: " SNAPSHOT_DIR; echo "$$SNAPSHOT_DIR">>SNAPSHOT_DIR; cat SNAPSHOT_DIR; \
 	done ;
