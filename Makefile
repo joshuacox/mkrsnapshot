@@ -1,5 +1,7 @@
 .PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs
 
+rsnapshot: run
+
 all: help
 
 help:
@@ -12,6 +14,9 @@ build: INVENTORY SNAPSHOT_DIR BACKUP_DIR builddocker
 
 # run a plain container
 run: rm build rsnapshotCID
+
+# alias
+r: rsnapshot
 
 rsnapshotCID:
 	$(eval NAME := $(shell cat NAME))
@@ -68,3 +73,44 @@ SNAPSHOT_DIR:
 rsnapshot: run
 
 clean: rm
+
+example:
+	cp -i inventory.example $(HOME)/inventory
+	echo $(HOME)/inventory > INVENTORY
+	echo $(HOME)/backups > BACKUP_DIR
+	echo $(HOME)/snapshots > SNAPSHOT_DIR
+
+new: NEW_USERNAME NEW_HOST NEW_PORT NEW_PATH INVENTORY BACKUP_DIR SNAPSHOT_DIR
+	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	$(eval NEW_USERNAME := $(shell cat NEW_USERNAME))
+	$(eval NEW_HOST := $(shell cat NEW_HOST))
+	$(eval NEW_PORT := $(shell cat NEW_PORT))
+	$(eval NEW_PATH := $(shell cat NEW_PATH))
+	$(eval INVENTORY := $(shell cat INVENTORY))
+	@cp $(INVENTORY) $(TMP)/newinventory
+	@echo "$(NEW_USERNAME),$(NEW_HOST),$(NEW_PORT),$(NEW_PATH)" >> $(TMP)/newinventory
+	@cat $(TMP)/newinventory | sort |uniq > $(TMP)/uniqinventory
+	-@diff $(TMP)/uniqinventory $(INVENTORY)
+	mv -i $(TMP)/uniqinventory $(INVENTORY)
+	-@rm -Rf $(TMP)
+	-@ rm NEW_USERNAME NEW_HOST NEW_PORT NEW_PATH
+
+NEW_USERNAME:
+	@while [ -z "$$NEW_USERNAME" ]; do \
+		read -r -p "Enter the NEW_USERNAME directory you wish to associate with this new backup [NEW_USERNAME]: " NEW_USERNAME; echo "$$NEW_USERNAME">>NEW_USERNAME; cat NEW_USERNAME; \
+	done ;
+
+NEW_HOST:
+	@while [ -z "$$NEW_HOST" ]; do \
+		read -r -p "Enter the NEW_HOST directory you wish to associate with this new backup [NEW_HOST]: " NEW_HOST; echo "$$NEW_HOST">>NEW_HOST; cat NEW_HOST; \
+	done ;
+
+NEW_PORT:
+	@while [ -z "$$NEW_PORT" ]; do \
+		read -r -p "Enter the NEW_PORT directory you wish to associate with this new backup [NEW_PORT]: " NEW_PORT; echo "$$NEW_PORT">>NEW_PORT; cat NEW_PORT; \
+	done ;
+
+NEW_PATH:
+	@while [ -z "$$NEW_PATH" ]; do \
+		read -r -p "Enter the NEW_PATH directory you wish to associate with this new backup [NEW_PATH]: " NEW_PATH; echo "$$NEW_PATH">>NEW_PATH; cat NEW_PATH; \
+	done ;
