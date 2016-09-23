@@ -2,10 +2,10 @@
 
 Make an rsnapshot PDQ
 
-KISS backup method,  I like to use at least two backup methods.  
-One can be complex, but I need one to be very simple stupid and bulletproof
-So I adapted some old shell scripts into a docker container with a 
-shellscript that reads a CSV inventory file and does a simple rsnapshot based backup
+KISS backup method,  I like to use at least two backup methods.
+One can be complex, but I need one to be very simple stupid and bulletproof.
+So I adapted some old shell scripts into a docker container with a
+shellscript that reads a CSV inventory file and does a simple rsnapshot based backup.
 
 ### Usage
 
@@ -13,7 +13,7 @@ shellscript that reads a CSV inventory file and does a simple rsnapshot based ba
 make rsnapshot
 ```
 
-it will prompt you for a path to your ssh keys, and ssh information about the remote host
+it will prompt you for a path to your ssh keys, and ssh information about the remote host.
 
 ### Example
 
@@ -22,7 +22,15 @@ make example
 ```
 
 will setup your home folder as the location for the inventory file,
-and both the backups and snapshots directories, then simply edit the inventory file inside your home directory and  `make rsnapshot`
+and both the backups and snapshots directories, then simply edit the inventory file (or use `make new` ) inside your home directory and  `make rsnapshot`.
+
+Afterwards look inside of `~/backups` which contains backups.
+
+And `~/snapshots` which contains the snapshot hardlinks.
+
+#### WARNING
+due to the nature of [hardlinks](http://linuxgazette.net/105/pitcher.html) these two folders must be placed on the same filesystem.
+
 
 ### Inventory
 
