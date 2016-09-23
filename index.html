@@ -89,6 +89,14 @@ echo $HOME/inventory &gt; INVENTORY
 <p>Or just use the <code>make example</code> from above, but I wanted to give you an idea of how to change the defaults.</p>
 
 <h3>
+<a id="test" class="anchor" href="#test" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Test</h3>
+
+<pre><code>make test
+</code></pre>
+
+<p>will test your inventory and attempt to contact each of the ssh servers and print out <code>uname -a</code> for them</p>
+
+<h3>
 <a id="new" class="anchor" href="#new" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>New</h3>
 
 <pre><code>make new
@@ -109,6 +117,12 @@ it will sort and uniq your inventory to prevent duplicates</p>
 
 <p>Why didn't I stick with a space separated file?  I didn't plan that far ahead when starting! :P  That would simplify the loop, but this works for now.  I can foresee going the other direction into a json inventory file as well.
 But that makes it more complicated. Keep It Simple Stupid</p>
+
+<h3>
+<a id="gnu-parallel" class="anchor" href="#gnu-parallel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GNU Parallel</h3>
+
+<p>O. Tange (2011): GNU Parallel - The Command-Line Power Tool,
+    ;login: The USENIX Magazine, February 2011:42-47.</p>
       </section>
     </div>
 
