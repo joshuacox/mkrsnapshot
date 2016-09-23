@@ -58,6 +58,14 @@ echo $HOME/inventory > INVENTORY
 
 Or just use the `make example` from above, but I wanted to give you an idea of how to change the defaults.
 
+### Test
+
+```
+make test
+```
+
+will test your inventory and attempt to contact each of the ssh servers and print out `uname -a` for them
+
 ### New
 
 ```
