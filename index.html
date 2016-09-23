@@ -33,10 +33,10 @@
 
 <p>Make an rsnapshot PDQ</p>
 
-<p>KISS backup method,  I like to use at least two backup methods.<br>
-One can be complex, but I need one to be very simple stupid and bulletproof
-So I adapted some old shell scripts into a docker container with a 
-shellscript that reads a CSV inventory file and does a simple rsnapshot based backup</p>
+<p>KISS backup method,  I like to use at least two backup methods.
+One can be complex, but I need one to be very simple stupid and bulletproof.
+So I adapted some old shell scripts into a docker container with a
+shellscript that reads a CSV inventory file and does a simple rsnapshot based backup.</p>
 
 <h3>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h3>
@@ -44,7 +44,7 @@ shellscript that reads a CSV inventory file and does a simple rsnapshot based ba
 <pre><code>make rsnapshot
 </code></pre>
 
-<p>it will prompt you for a path to your ssh keys, and ssh information about the remote host</p>
+<p>it will prompt you for a path to your ssh keys, and ssh information about the remote host.</p>
 
 <h3>
 <a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h3>
@@ -53,7 +53,16 @@ shellscript that reads a CSV inventory file and does a simple rsnapshot based ba
 </code></pre>
 
 <p>will setup your home folder as the location for the inventory file,
-and both the backups and snapshots directories, then simply edit the inventory file inside your home directory and  <code>make rsnapshot</code></p>
+and both the backups and snapshots directories, then simply edit the inventory file (or use <code>make new</code> ) inside your home directory and  <code>make rsnapshot</code>.</p>
+
+<p>Afterwards look inside of <code>~/backups</code> which contains backups.</p>
+
+<p>And <code>~/snapshots</code> which contains the snapshot hardlinks.</p>
+
+<h4>
+<a id="warning" class="anchor" href="#warning" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>WARNING</h4>
+
+<p>due to the nature of <a href="http://linuxgazette.net/105/pitcher.html">hardlinks</a> these two folders must be placed on the same filesystem.</p>
 
 <h3>
 <a id="inventory" class="anchor" href="#inventory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Inventory</h3>
