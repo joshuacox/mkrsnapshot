@@ -116,3 +116,6 @@ NEW_PATH:
 	@while [ -z "$$NEW_PATH" ]; do \
 		read -r -p "Enter the NEW_PATH directory you wish to associate with this new backup [NEW_PATH]: " NEW_PATH; echo "$$NEW_PATH">>NEW_PATH; cat NEW_PATH; \
 	done ;
+
+test:
+	/bin/bash tester.sh

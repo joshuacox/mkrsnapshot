@@ -81,3 +81,7 @@ Why didn't I stick with a space separated file?  I didn't plan that far ahead wh
 But that makes it more complicated. Keep It Simple Stupid
 
 
+### GNU Parallel
+
+  O. Tange (2011): GNU Parallel - The Command-Line Power Tool,
+    ;login: The USENIX Magazine, February 2011:42-47.
