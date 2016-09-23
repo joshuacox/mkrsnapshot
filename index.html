@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Mkrsnapshot by joshuacox</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Mkrsnapshot</h1>
+        <h2>Make an rsnapshot backup PDQ</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/joshuacox/mkrsnapshot/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/joshuacox/mkrsnapshot/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/joshuacox/mkrsnapshot" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="mkrsnapshot" class="anchor" href="#mkrsnapshot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mkrsnapshot</h1>
+
+<p>Make an rsnapshot PDQ</p>
+
+<p>KISS backup method,  I like to use at least two backup methods.<br>
+One can be complex, but I need one to be very simple stupid and bulletproof
+So I adapted some old shell scripts into a docker container with a 
+shellscript that reads a CSV inventory file and does a simple rsnapshot based backup</p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h3>
+
+<pre><code>make rsnapshot
+</code></pre>
+
+<p>it will prompt you for a path to your ssh keys, and ssh information about the remote host</p>
+
+<h3>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h3>
+
+<pre><code>make example
+</code></pre>
+
+<p>will setup your home folder as the location for the inventory file,
+and both the backups and snapshots directories, then simply edit the inventory file inside your home directory and  <code>make rsnapshot</code></p>
+
+<h3>
+<a id="inventory" class="anchor" href="#inventory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Inventory</h3>
+
+<p>The inventory file is merely a CSV file with username, hostname (or IP), port, and a path:</p>
+
+<pre><code>#USERNAME,IPorFQDN,PORT,PATH
+username,192.168.51.186,2222,/path
+root,example.com,2022,/etc
+</code></pre>
+
+<p>you will be prompted for a location of this file, or you can copy the example and use it here:</p>
+
+<pre><code>cp -i inventory.example inventory
+echo `pwd`/inventory &gt; INVENTORY
+</code></pre>
+
+<p>I prefer to keep it outside of the git directory though. How about your home directory?</p>
+
+<pre><code>cp -i inventory.example $HOME/inventory
+echo $HOME/inventory &gt; INVENTORY
+</code></pre>
+
+<p>Or just use the <code>make example</code> from above, but I wanted to give you an idea of how to change the defaults.</p>
+
+<h3>
+<a id="new" class="anchor" href="#new" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>New</h3>
+
+<pre><code>make new
+</code></pre>
+
+<p>This command will prompt you for all the necessary components of another line in the inventory and write another line to your inventory,
+it will sort and uniq your inventory to prevent duplicates</p>
+
+<h3>
+<a id="details" class="anchor" href="#details" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Details</h3>
+
+<p>Not much to explain here, everything happens in <code>start.sh</code></p>
+
+<p>and the meat of the whole thing is really done by this for loop:</p>
+
+<pre><code>for i in $(cat $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "rsync -ave \"ssh -p " $3 "\" --relative " $1 "@" $2 ":" $4 " /backups/" $2 "/" }'&gt;&gt;/tmp/sync.sh ;done
+</code></pre>
+
+<p>Why didn't I stick with a space separated file?  I didn't plan that far ahead when starting! :P  That would simplify the loop, but this works for now.  I can foresee going the other direction into a json inventory file as well.
+But that makes it more complicated. Keep It Simple Stupid</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
