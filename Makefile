@@ -91,8 +91,9 @@ new: NEW_USERNAME NEW_HOST NEW_PORT NEW_PATH INVENTORY BACKUP_DIR SNAPSHOT_DIR
 	grep -v '^#' $(INVENTORY) > $(TMP)/newinventory
 	echo "$(NEW_USERNAME),$(NEW_HOST),$(NEW_PORT),$(NEW_PATH)" >> $(TMP)/newinventory
 	sort $(TMP)/newinventory | uniq >> $(TMP)/uniqinventory
-	diff $(TMP)/uniqinventory $(INVENTORY)
-	mv -i $(TMP)/uniqinventory $(INVENTORY)
+	grep . $(TMP)/uniqinventory > $(TMP)/clean
+	-diff $(TMP)/clean $(INVENTORY)
+	mv -i $(TMP)/clean $(INVENTORY)
 	-@rm -Rf $(TMP)
 	-@ rm NEW_USERNAME NEW_HOST NEW_PORT NEW_PATH
 
