@@ -87,12 +87,11 @@ new: NEW_USERNAME NEW_HOST NEW_PORT NEW_PATH INVENTORY BACKUP_DIR SNAPSHOT_DIR
 	$(eval NEW_PORT := $(shell cat NEW_PORT))
 	$(eval NEW_PATH := $(shell cat NEW_PATH))
 	$(eval INVENTORY := $(shell cat INVENTORY))
-	-@grep '^#' $(INVENTORY) > $(TMP)/header
-	@grep -v '^#' $(INVENTORY) > $(TMP)/newinventory
-	@echo "$(NEW_USERNAME),$(NEW_HOST),$(NEW_PORT),$(NEW_PATH)" >> $(TMP)/newinventory
-	@cp $(TMP)/header $(TMP)/uniqinventory
-	@cat $(TMP)/newinventory | sort |uniq >> $(TMP)/uniqinventory
-	-@diff $(TMP)/uniqinventory $(INVENTORY)
+	-grep '^#' $(INVENTORY) > $(TMP)/uniqinventory
+	grep -v '^#' $(INVENTORY) > $(TMP)/newinventory
+	echo "$(NEW_USERNAME),$(NEW_HOST),$(NEW_PORT),$(NEW_PATH)" >> $(TMP)/newinventory
+	sort $(TMP)/newinventory | uniq >> $(TMP)/uniqinventory
+	diff $(TMP)/uniqinventory $(INVENTORY)
 	mv -i $(TMP)/uniqinventory $(INVENTORY)
 	-@rm -Rf $(TMP)
 	-@ rm NEW_USERNAME NEW_HOST NEW_PORT NEW_PATH
