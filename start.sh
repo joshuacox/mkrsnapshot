@@ -11,18 +11,25 @@ chmod 600 /root/.ssh/known_hosts
 chown root. /root/.ssh/id*
 chown root. /root/.ssh/known_hosts
 
-INVENTORY=/root/inventory
+rsync -av /root/inventory /backups/
+TMP=$(mktemp -d --suffix=SNAPTMP)
+grep -v '^#' /root/inventory > $TMP/inventory
+INVENTORY=$TMP/inventory
 # make sync.sh file
-rm -f /tmp/sync.sh
-echo '#!/bin/bash' >> /tmp/sync.sh
-chmod +x /tmp/sync.sh
+rm -f $TMP/sync.sh
+echo '#!/bin/bash' >> $TMP/sync.sh
+chmod +x $TMP/sync.sh
 # mkdir 
-for i in $(grep -v '^#' $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "REMOTE_USER="$1 " REMOTE_HOST="$2 " REMOTE_PORT="$3 " REMOTE_PATH="$4 " mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER"}' >>/tmp/sync.sh ;done
+#for i in $(cat $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "REMOTE_USER="$1 " REMOTE_HOST="$2 " REMOTE_PORT="$3 " REMOTE_PATH="$4 " mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER"}' >>$TMP/sync.sh ;done
 # echo
-echo "rsync -av $INVENTORY /backups/"
-for i in $(grep -v '^#' $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "rsync -ave \"ssh -p " $3 "\" --relative " $1 "@" $2 ":" $4 " /backups/" $2 "/" }'>>/tmp/sync.sh ;done
-cat /tmp/sync.sh
-/bin/bash /tmp/sync.sh
+#for i in $(cat $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "rsync -ave \"ssh -p " $3 "\" --relative " $1 "@" $2 ":" $4 " /backups/" $2 "/" }'>>$TMP/sync.sh ;done
+while IFS="," read REMOTE_USER REMOTE_HOST REMOTE_PORT REMOTE_PATH
+do
+    echo "mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER" >>$TMP/sync.sh
+    echo "rsync -ave \"ssh -p " $REMOTE_PORT "\" --relative " $REMOTE_USER "@" $REMOTE_HOST ":" $REMOTE_PATH " /backups/" $REMOTE_HOST "/" >>$TMP/sync.sh
+done < $INVENTORY
+cat $TMP/sync.sh
+/bin/bash $TMP/sync.sh
 rsnapshot sync
 rsnapshot hourly
 rsnapshot daily
