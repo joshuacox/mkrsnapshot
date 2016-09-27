@@ -26,7 +26,7 @@ chmod +x $TMP/sync.sh
 while IFS="," read REMOTE_USER REMOTE_HOST REMOTE_PORT REMOTE_PATH
 do
     echo "mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER" >>$TMP/sync.sh
-    echo "rsync -ave \"ssh -p " $REMOTE_PORT "\" --relative " $REMOTE_USER "@" $REMOTE_HOST ":" $REMOTE_PATH " /backups/" $REMOTE_HOST "/" >>$TMP/sync.sh
+    echo "rsync -ave \"ssh -p $REMOTE_PORT \" --relative  $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH  /backups/$REMOTE_HOST/" >>$TMP/sync.sh
 done < $INVENTORY
 cat $TMP/sync.sh
 /bin/bash $TMP/sync.sh
