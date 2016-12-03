@@ -2,6 +2,7 @@ FROM debian:jessie
 MAINTAINER Josh Cox <josh 'at' webhosting coop>
 
 ENV PARALLEL_JOBS 4
+ENV SHELL /bin/bash
 
 RUN apt-get update && apt-get install -y autossh curl rsync bzip2 unzip zip time parallel wget rsnapshot; \
 apt-get -y autoremove ; \
