@@ -10,7 +10,7 @@ help:
 	@echo ""  This is merely a base image for usage read the README file
 	@echo ""   1. make run       - build and run docker container
 
-build: INVENTORY SNAPSHOT_DIR BACKUP_DIR builddocker
+build: INVENTORY SNAPSHOT_DIR BACKUP_DIR PARALLEL_JOBS builddocker
 
 # run a plain container
 run: rm build rsnapshotCID
@@ -25,11 +25,13 @@ rsnapshotCID:
 	$(eval BACKUP_DIR := $(shell cat BACKUP_DIR))
 	$(eval SNAPSHOT_DIR := $(shell cat SNAPSHOT_DIR))
 	$(eval INVENTORY := $(shell cat INVENTORY))
+	$(eval PARALLEL_JOBS := $(shell cat PARALLEL_JOBS))
 	@docker run --name=$(NAME) \
 	-d \
 	--cidfile="rsnapshotCID" \
 	-v $(KEYS):/root/keys \
 	-v $(INVENTORY):/root/inventory \
+	-e PARALLEL_JOBS:$(PARALLEL_JOBS) \
 	-v $(BACKUP_DIR):/backups \
 	-v $(SNAPSHOT_DIR):/snapshot \
 	-v `pwd`/rsnapshot.conf:/etc/rsnapshot.conf \
@@ -52,6 +54,11 @@ enter:
 
 logs:
 	docker logs -f `cat rsnapshotCID`
+
+PARALLEL_JOBS:
+	@while [ -z "$$PARALLEL_JOBS" ]; do \
+		read -r -p "Enter the number of PARALLEL_JOBS you wish to associate with this container [PARALLEL_JOBS]: " PARALLEL_JOBS; echo "$$PARALLEL_JOBS">>PARALLEL_JOBS; cat PARALLEL_JOBS; \
+	done ;
 
 INVENTORY:
 	@while [ -z "$$INVENTORY" ]; do \

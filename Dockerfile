@@ -1,7 +1,9 @@
 FROM debian:jessie
 MAINTAINER Josh Cox <josh 'at' webhosting coop>
 
-RUN apt-get update && apt-get install -y autossh curl rsync bzip2 unzip zip  wget rsnapshot; \
+ENV PARALLEL_JOBS 4
+
+RUN apt-get update && apt-get install -y autossh curl rsync bzip2 unzip zip time parallel wget rsnapshot; \
 apt-get -y autoremove ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*

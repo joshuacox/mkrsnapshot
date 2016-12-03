@@ -29,7 +29,7 @@ do
     echo "rsync -ave \"ssh -p $REMOTE_PORT \" --relative  $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH  /backups/$REMOTE_HOST/" >>$TMP/sync.sh
 done < $INVENTORY
 cat $TMP/sync.sh
-/bin/bash $TMP/sync.sh
+/usr/bin/time parallel --jobs $PARALLEL_JOBS  -- < $TMP/sync.sh
 rsnapshot sync
 rsnapshot hourly
 rsnapshot daily
