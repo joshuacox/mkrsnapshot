@@ -8,12 +8,13 @@ INVENTORY=$TMP/inventory
     #echo  "ssh-keyscan $REMOTE_HOST -p $REMOTE_PORT >>~/.ssh/known_hosts" >> $TMP/keyscan.sh
 while IFS="," read REMOTE_USER REMOTE_HOST REMOTE_PORT REMOTE_PATH
 do
-    echo  "ssh-keyscan $REMOTE_HOST -p $REMOTE_PORT >>$TMP/known_hosts" >> $TMP/keyscan.sh
+    echo  "ssh-keyscan -p $REMOTE_PORT $REMOTE_HOST >>$TMP/known_hosts 2>/dev/null " >> $TMP/keyscan.sh
 done < $INVENTORY
-#cat $TMP/keyscan.sh
+cat $TMP/keyscan.sh
+bash $TMP/keyscan.sh
 cd $TMP
 cp ~/.ssh/known_hosts $TMP/known_hosts.new
-cat   $TMP/known_hosts.new|sort|uniq>$TMP/known_hosts.sorted
+cat $TMP/known_hosts $TMP/known_hosts.new|sort|uniq>$TMP/known_hosts.sorted
 diff  $TMP/known_hosts.sorted ~/.ssh/known_hosts
 cp -i $TMP/known_hosts.sorted ~/.ssh/known_hosts
 cd /tmp
