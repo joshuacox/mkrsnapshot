@@ -31,8 +31,10 @@ done < $INVENTORY
 cat $TMP/dirmk.sh
 bash $TMP/dirmk.sh
 rm $TMP/dirmk.sh
-shuf --random-source=/dev/urandom $TMP/sync.sh --output=$TMP/shuff.sh
+shuf --random-source=/dev/urandom $TMP/sync.sh --output=$TMP/rand.sh
+shuf --random-source=/dev/random $TMP/rand.sh --output=$TMP/shuff.sh
 rm  $TMP/sync.sh
+rm  $TMP/rand.sh
 cat $TMP/shuff.sh
 /usr/bin/time parallel --jobs $PARALLEL_JOBS  -- < $TMP/shuff.sh
 rm $TMP/shuff.sh
