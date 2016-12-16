@@ -28,10 +28,13 @@ do
     echo "mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER" >>$TMP/sync.sh
     echo "rsync -ave \"ssh -p $REMOTE_PORT \" --relative  $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH  /backups/$REMOTE_HOST/" >>$TMP/sync.sh
 done < $INVENTORY
-cat $TMP/sync.sh
-/usr/bin/time parallel --jobs $PARALLEL_JOBS  -- < shuf --random-source=/dev/urandom $TMP/sync.sh
+shuf --random-source=/dev/urandom $TMP/sync.sh --output=$TMP/shuff.sh
+rm  $TMP/sync.sh
+cat $TMP/shuff.sh
+/usr/bin/time parallel --jobs $PARALLEL_JOBS  -- < $TMP/shuff.sh
+rm $TMP/shuff.sh
 rsnapshot sync
-rsnapshot hourly
-rsnapshot daily
-rsnapshot weekly
-
+#rsnapshot hourly
+#rsnapshot daily
+#rsnapshot weekly
+rsnapshot $RSNAPSHOT_PERIOD

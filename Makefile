@@ -10,7 +10,7 @@ help:
 	@echo ""  This is merely a base image for usage read the README file
 	@echo ""   1. make run       - build and run docker container
 
-build: INVENTORY SNAPSHOT_DIR BACKUP_DIR PARALLEL_JOBS builddocker
+build: RSNAPSHOT_PERIOD INVENTORY SNAPSHOT_DIR BACKUP_DIR PARALLEL_JOBS builddocker
 
 # run a plain container
 run: rm build rsnapshotCID
@@ -26,12 +26,14 @@ rsnapshotCID:
 	$(eval SNAPSHOT_DIR := $(shell cat SNAPSHOT_DIR))
 	$(eval INVENTORY := $(shell cat INVENTORY))
 	$(eval PARALLEL_JOBS := $(shell cat PARALLEL_JOBS))
+	$(eval RSNAPSHOT_PERIOD := $(shell cat RSNAPSHOT_PERIOD))
 	@docker run --name=$(NAME) \
 	-d \
 	--cidfile="rsnapshotCID" \
 	-v $(KEYS):/root/keys \
 	-v $(INVENTORY):/root/inventory \
 	-e PARALLEL_JOBS:$(PARALLEL_JOBS) \
+	-e RSNAPSHOT_PERIOD:$(RSNAPSHOT_PERIOD) \
 	-v $(BACKUP_DIR):/backups \
 	-v $(SNAPSHOT_DIR):/snapshot \
 	-v `pwd`/rsnapshot.conf:/etc/rsnapshot.conf \
@@ -86,6 +88,7 @@ example:
 	echo $(HOME)/inventory > INVENTORY
 	echo $(HOME)/backups > BACKUP_DIR
 	echo $(HOME)/snapshots > SNAPSHOT_DIR
+	echo 'daily' > RSNAPSHOT_PERIOD
 
 new: NEW_USERNAME NEW_HOST NEW_PORT NEW_PATH INVENTORY BACKUP_DIR SNAPSHOT_DIR
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
@@ -122,6 +125,11 @@ NEW_PORT:
 NEW_PATH:
 	@while [ -z "$$NEW_PATH" ]; do \
 		read -r -p "Enter the NEW_PATH directory you wish to associate with this new backup [NEW_PATH]: " NEW_PATH; echo "$$NEW_PATH">>NEW_PATH; cat NEW_PATH; \
+	done ;
+
+RSNAPSHOT_PERIOD:
+	@while [ -z "$$RSNAPSHOT_PERIOD" ]; do \
+		read -r -p "Enter the RSNAPSHOT_PERIOD you wish to associate with this new backup [hourly,daily,weekly]: " RSNAPSHOT_PERIOD; echo "$$RSNAPSHOT_PERIOD">>RSNAPSHOT_PERIOD; cat RSNAPSHOT_PERIOD; \
 	done ;
 
 test:
