@@ -25,9 +25,12 @@ chmod +x $TMP/sync.sh
 #for i in $(cat $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "rsync -ave \"ssh -p " $3 "\" --relative " $1 "@" $2 ":" $4 " /backups/" $2 "/" }'>>$TMP/sync.sh ;done
 while IFS="," read REMOTE_USER REMOTE_HOST REMOTE_PORT REMOTE_PATH
 do
-    echo "mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER" >>$TMP/sync.sh
+    echo "mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER" >>$TMP/dirmk.sh
     echo "rsync -ave \"ssh -p $REMOTE_PORT \" --relative  $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH  /backups/$REMOTE_HOST/" >>$TMP/sync.sh
 done < $INVENTORY
+cat $TMP/dirmk.sh
+bash $TMP/dirmk.sh
+rm $TMP/dirmk.sh
 shuf --random-source=/dev/urandom $TMP/sync.sh --output=$TMP/shuff.sh
 rm  $TMP/sync.sh
 cat $TMP/shuff.sh
