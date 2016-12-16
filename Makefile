@@ -32,8 +32,8 @@ rsnapshotCID:
 	--cidfile="rsnapshotCID" \
 	-v $(KEYS):/root/keys \
 	-v $(INVENTORY):/root/inventory \
-	-e PARALLEL_JOBS:$(PARALLEL_JOBS) \
-	-e RSNAPSHOT_PERIOD:$(RSNAPSHOT_PERIOD) \
+	-e PARALLEL_JOBS=$(PARALLEL_JOBS) \
+	-e RSNAPSHOT_PERIOD=$(RSNAPSHOT_PERIOD) \
 	-v $(BACKUP_DIR):/backups \
 	-v $(SNAPSHOT_DIR):/snapshot \
 	-v `pwd`/rsnapshot.conf:/etc/rsnapshot.conf \
