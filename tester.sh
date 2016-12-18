@@ -13,8 +13,8 @@ do
     echo  "ssh $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT \"uname -a\"">>$TMP/tester.sh
 done < $INVENTORY
 echo " "
-echo "starting GNU parallel to run the following"
-echo " "
+echo '** These are the hosts I see in the inventory file: **'
 cat $TMP/tester.sh
+echo '** Running uname -r on all hosts: **'
 /bin/bash $TMP/tester.sh
 rm -Rf $TMP

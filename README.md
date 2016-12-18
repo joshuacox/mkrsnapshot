@@ -85,10 +85,6 @@ and the meat of the whole thing is really done by this for loop:
 for i in $(cat $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "rsync -ave \"ssh -p " $3 "\" --relative " $1 "@" $2 ":" $4 " /backups/" $2 "/" }'>>/tmp/sync.sh ;done
 ```
 
-Why didn't I stick with a space separated file?  I didn't plan that far ahead when starting! :P  That would simplify the loop, but this works for now.  I can foresee going the other direction into a json inventory file as well.
-But that makes it more complicated. Keep It Simple Stupid
-
-
 ### GNU Parallel
 
   O. Tange (2011): GNU Parallel - The Command-Line Power Tool,

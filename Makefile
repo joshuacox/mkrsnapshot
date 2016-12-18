@@ -1,4 +1,4 @@
-.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs keyscan showinv tester
+.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs keyscan showinv tester test
 
 rsnapshot: run
 
@@ -131,6 +131,8 @@ RSNAPSHOT_PERIOD:
 	@while [ -z "$$RSNAPSHOT_PERIOD" ]; do \
 		read -r -p "Enter the RSNAPSHOT_PERIOD you wish to associate with this new backup [hourly,daily,weekly]: " RSNAPSHOT_PERIOD; echo "$$RSNAPSHOT_PERIOD">>RSNAPSHOT_PERIOD; cat RSNAPSHOT_PERIOD; \
 	done ;
+
+test: tester
 
 tester:
 	/bin/bash tester.sh
