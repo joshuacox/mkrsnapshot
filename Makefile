@@ -84,6 +84,7 @@ rsnapshot: run
 clean: rm
 
 example:
+	cp KEYS.example KEYS
 	cp -i inventory.example $(HOME)/inventory
 	echo $(HOME)/inventory > INVENTORY
 	echo $(HOME)/backups > BACKUP_DIR

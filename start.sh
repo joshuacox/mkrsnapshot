@@ -18,6 +18,7 @@ INVENTORY=$TMP/inventory
 # make sync.sh file
 rm -f $TMP/sync.sh
 #echo '#!/bin/bash' >> $TMP/sync.sh
+touch $TMP/sync.sh
 chmod +x $TMP/sync.sh
 # mkdir 
 #for i in $(cat $INVENTORY);do echo $i|cut --output-delimiter=' ' -f1,2,3,4 -d','|awk '{print "REMOTE_USER="$1 " REMOTE_HOST="$2 " REMOTE_PORT="$3 " REMOTE_PATH="$4 " mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER"}' >>$TMP/sync.sh ;done
@@ -26,7 +27,7 @@ chmod +x $TMP/sync.sh
 while IFS="," read REMOTE_USER REMOTE_HOST REMOTE_PORT REMOTE_PATH
 do
     echo "mkdir -p /backups/$REMOTE_HOST/$REMOTE_USER" >>$TMP/dirmk.sh
-    echo "rsync -ave \"ssh -p $REMOTE_PORT \" --relative  $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH  /backups/$REMOTE_HOST/" >>$TMP/sync.sh
+    echo "rsync -ae \"ssh -p $REMOTE_PORT \" --relative  $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH  /backups/$REMOTE_HOST/" >>$TMP/sync.sh
 done < $INVENTORY
 cat $TMP/dirmk.sh
 bash $TMP/dirmk.sh
