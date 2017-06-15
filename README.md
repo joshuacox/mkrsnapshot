@@ -7,6 +7,12 @@ One can be complex, but I need one to be very simple stupid and bulletproof.
 So I adapted some old shell scripts into a docker container with a
 shellscript that reads a CSV inventory file and does a simple rsnapshot based backup.
 
+## NOTE
+
+It is best to setup a 'backup' user, and give it permissions to read the
+data you want backed up, make sure it has a clean .bashrc or anything
+else that might run upon login
+
 ### Usage
 
 ```
