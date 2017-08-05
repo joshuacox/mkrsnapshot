@@ -2,6 +2,7 @@
 echo -e  'y\n'|ssh-keygen -q -t ecdsa -N "" -f ~/.ssh/id_ecdsa > /dev/null 2>&1
 rm  -f /root/.ssh/authorized_keys
 
+cp -a /root/keys/config /root/.ssh/
 cp -a /root/keys/id* /root/.ssh/
 cp -a /root/keys/known_hosts /root/.ssh/
 
