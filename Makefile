@@ -12,8 +12,10 @@ help:
 
 build: RSNAPSHOT_PERIOD INVENTORY SNAPSHOT_DIR BACKUP_DIR PARALLEL_JOBS BWLIMIT builddocker
 
+pull: RSNAPSHOT_PERIOD INVENTORY SNAPSHOT_DIR BACKUP_DIR PARALLEL_JOBS BWLIMIT pulldocker
+
 # run a plain container
-run: rm build rsnapshotCID
+run: rm RSNAPSHOT_PERIOD INVENTORY SNAPSHOT_DIR BACKUP_DIR PARALLEL_JOBS BWLIMIT rsnapshotCID
 
 # alias
 r: rsnapshot
@@ -43,6 +45,9 @@ rsnapshotCID:
 
 builddocker:
 	/usr/bin/time -v docker build -t `cat TAG` .
+
+pulldocker:
+	/usr/bin/time -v docker pull `cat TAG` .
 
 kill:
 	-@docker kill `cat rsnapshotCID`
