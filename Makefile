@@ -10,7 +10,7 @@ help:
 	@echo ""  This is merely a base image for usage read the README file
 	@echo ""   1. make run       - build and run docker container
 
-build: RSNAPSHOT_PERIOD INVENTORY SNAPSHOT_DIR BACKUP_DIR PARALLEL_JOBS builddocker
+build: RSNAPSHOT_PERIOD INVENTORY SNAPSHOT_DIR BACKUP_DIR PARALLEL_JOBS BWLIMIT builddocker
 
 # run a plain container
 run: rm build rsnapshotCID
@@ -22,6 +22,7 @@ rsnapshotCID:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	$(eval KEYS := $(shell cat KEYS))
+	$(eval BWLIMIT := $(shell cat BWLIMIT))
 	$(eval BACKUP_DIR := $(shell cat BACKUP_DIR))
 	$(eval SNAPSHOT_DIR := $(shell cat SNAPSHOT_DIR))
 	$(eval INVENTORY := $(shell cat INVENTORY))
@@ -33,6 +34,7 @@ rsnapshotCID:
 	-v $(KEYS):/root/keys \
 	-v $(INVENTORY):/root/inventory \
 	-e PARALLEL_JOBS=$(PARALLEL_JOBS) \
+	-e BWLIMIT=$(BWLIMIT) \
 	-e RSNAPSHOT_PERIOD=$(RSNAPSHOT_PERIOD) \
 	-v $(BACKUP_DIR):/backups \
 	-v $(SNAPSHOT_DIR):/snapshot \
@@ -88,6 +90,8 @@ example:
 	echo $(HOME)/inventory > INVENTORY
 	echo $(HOME)/backups > BACKUP_DIR
 	echo $(HOME)/snapshots > SNAPSHOT_DIR
+	echo 512 > BWLIMIT
+	echo 1 > PARALLEL_JOBS
 	echo 'daily' > RSNAPSHOT_PERIOD
 
 new: NEW_USERNAME NEW_HOST NEW_PORT NEW_PATH INVENTORY BACKUP_DIR SNAPSHOT_DIR
@@ -130,6 +134,11 @@ NEW_PATH:
 RSNAPSHOT_PERIOD:
 	@while [ -z "$$RSNAPSHOT_PERIOD" ]; do \
 		read -r -p "Enter the RSNAPSHOT_PERIOD you wish to associate with this new backup [hourly,daily,weekly]: " RSNAPSHOT_PERIOD; echo "$$RSNAPSHOT_PERIOD">>RSNAPSHOT_PERIOD; cat RSNAPSHOT_PERIOD; \
+	done ;
+
+BWLIMIT:
+	@while [ -z "$$BWLIMIT" ]; do \
+		read -r -p "Enter the bandwidth limit you wish to use, in K [BWLIMIT]: " BWLIMIT; echo "$$BWLIMIT">>BWLIMIT; cat BWLIMIT; \
 	done ;
 
 test: tester
