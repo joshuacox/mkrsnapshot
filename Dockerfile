@@ -1,5 +1,5 @@
 FROM debian:jessie
-MAINTAINER Josh Cox <josh 'at' webhosting coop>
+LABEL maintainer="Josh Cox <josh 'at' http://webhosting coop/>"
 
 ENV PARALLEL_JOBS 4
 ENV SHELL /bin/bash
