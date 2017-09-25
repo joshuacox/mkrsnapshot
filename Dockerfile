@@ -4,7 +4,7 @@ LABEL maintainer="Josh Cox <josh 'at' http://webhosting coop/>"
 ENV PARALLEL_JOBS 4
 ENV SHELL /bin/bash
 
-RUN apt-get update && apt-get install -y autossh curl rsync bzip2 unzip zip time parallel rsnapshot; \
+RUN apt-get update && apt-get install -yqq --no-install-recommends autossh curl rsync bzip2 unzip zip time parallel rsnapshot; \
 apt-get -y autoremove ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*

@@ -8,6 +8,10 @@ INVENTORY=$TMP/inventory
     #echo  "ssh-keyscan $REMOTE_HOST -p $REMOTE_PORT >>~/.ssh/known_hosts" >> $TMP/keyscan.sh
 while IFS="," read REMOTE_USER REMOTE_HOST REMOTE_PORT REMOTE_PATH
 do
+    export REMOTE_USER=$REMOTE_USER
+    export REMOTE_HOST=$REMOTE_HOST
+    export REMOTE_PORT=$REMOTE_PORT
+    export REMOTE_PATH=$REMOTE_PATH
     echo  "ssh-keyscan -p $REMOTE_PORT $REMOTE_HOST >>$TMP/known_hosts 2>/dev/null " >> $TMP/keyscan.sh
 done < $INVENTORY
 cat $TMP/keyscan.sh
